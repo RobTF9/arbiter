@@ -1,15 +1,20 @@
 <script lang="ts" setup>
-import "./css/index.css";
+import "./assets/index.css";
 import { SignUp } from "@clerk/vue";
-import { db } from "./lib/db";
 </script>
 
 <template>
-  <SignedOut>
-    <SignUp />
-  </SignedOut>
-  <SignedIn>
-    <UserButton />
-    <NuxtPage />
-  </SignedIn>
+  <UApp>
+    <SignedOut>
+      <SignUp />
+    </SignedOut>
+    <SignedIn>
+      <UContainer class="min-h-[44px] flex py-2 justify-between">
+        <ULink :active="false" :href="`/`" class="font-bold">Arbiter</ULink>
+        <UserButton />
+      </UContainer>
+      <USeparator class="mb-6" />
+      <NuxtPage />
+    </SignedIn>
+  </UApp>
 </template>

@@ -18,6 +18,7 @@ model User {
   id        String   @id @default(uuid())
   clerkId   String   @unique // External ID from Clerk
   lists     List[]
+  events    Event[]
 }
 
 // List model
@@ -29,7 +30,8 @@ model List {
   updatedAt   DateTime   @updatedAt
   reputation  Int        @default(0)
   rating Int        @default(0)
-  credits Int        @default(0)
+  credits Int        @default(1000)
+  gang String
 
   userId      String
   user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -126,7 +128,6 @@ model Injury {
   description String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
   characterId String
   character Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
 
@@ -157,11 +158,26 @@ model Advancement {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   cost Int
-
   characterId String
   character Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
 
   @@index([name])
   @@index([characterId])
   @@unique([name, characterId])
+}
+
+model Event {
+  id String @id @default(uuid())
+  type String
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  message String
+  createdAt DateTime @default(now())
+  status EventStatus @default(PENDING)
+}
+
+enum EventStatus {
+  PENDING
+  SUCCESS
+  ERROR
 }
