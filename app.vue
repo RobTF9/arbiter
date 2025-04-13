@@ -1,10 +1,12 @@
-<script setup lang="ts">
-// Components are automatically imported
+<script lang="ts" setup>
+import "./css/index.css";
+import { SignUp } from "@clerk/vue";
+import { db } from "./lib/db";
 </script>
 
 <template>
   <SignedOut>
-    <SignInButton />
+    <SignUp />
   </SignedOut>
   <SignedIn>
     <UserButton />

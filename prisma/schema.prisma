@@ -17,14 +17,6 @@ datasource db {
 model User {
   id        String   @id @default(uuid())
   clerkId   String   @unique // External ID from Clerk
-  email     String   @unique
-  firstName String?
-  lastName  String?
-  imageUrl  String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Relations
   lists     List[]
 }
 
@@ -35,26 +27,141 @@ model List {
   description String?
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
+  reputation  Int        @default(0)
+  rating Int        @default(0)
+  credits Int        @default(0)
 
-  // Relations
   userId      String
   user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  items       ListItem[]
+  characters  Character[]
 
   @@index([userId])
 }
 
-// ListItem model
-model ListItem {
-  id        String   @id @default(uuid())
-  content   String
-  completed Boolean  @default(false)
+model Character {
+  id String @id @default(uuid())
+  name String @unique
+  listId String
+  list List @relation(fields: [listId], references: [id], onDelete: Cascade)
+  movement Int
+  weaponSkill Int
+  ballisticSkill Int
+  strength Int
+  toughness Int
+  attacks Int
+  initiative Int
+  willpower Int
+  intelligence Int
+  wounds Int
+  leaderShip Int
+  cool Int
+  points Int
+  profile String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  xp Int @default(0)
+
+  wargear Wargear[]
+  weapons Weapon[]
+  injuries Injury[]
+  skills Skill[]
+  advancements Advancement[]
+
+  notes String?
+
+  @@index([listId])
+  @@unique([name, listId])
+}
+
+model Wargear {
+  id String @id @default(uuid())
+  name String
+  points Int
+  credits Int
+  description String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  type String
+  rarity String
+
+  characterId String
+  character Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+
+  @@index([name])
+  @@index([characterId])
+  @@unique([name, characterId])
+}
+
+model Weapon {
+  id String @id @default(uuid())
+  name String
+  points Int
+  credits Int
+  description String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  type String
+  rarity String
+  strength String
+  specialRules String
+  damage Int
+  shortRange Int
+  shortRangeModifier Int
+  longRangeModifier Int
+  longRange Int
+  ammo Int
+  armorPiercing Int
+
+  characterId String
+  character Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+
+  @@index([name])
+  @@index([characterId])
+  @@unique([name, characterId])
+}
+
+model Injury {
+  id String @id @default(uuid())
+  name String
+  description String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Relations
-  listId    String
-  list      List     @relation(fields: [listId], references: [id], onDelete: Cascade)
+  characterId String
+  character Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
 
-  @@index([listId])
+  @@index([name])
+  @@index([characterId])
+  @@unique([name, characterId])
+}
+
+model Skill {
+  id String @id @default(uuid())
+  name String
+  description String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  characterId String
+  character Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+
+  @@index([name])
+  @@index([characterId])
+  @@unique([name, characterId])
+}
+
+model Advancement {
+  id String @id @default(uuid())
+  name String
+  description String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  cost Int
+
+  characterId String
+  character Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+
+  @@index([name])
+  @@index([characterId])
+  @@unique([name, characterId])
 }
