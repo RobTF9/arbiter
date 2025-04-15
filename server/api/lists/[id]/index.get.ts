@@ -28,7 +28,11 @@ export default defineEventHandler(async (event) => {
             advancements: true,
           },
         },
-        messages: true,
+        messages: {
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
         _count: {
           select: {
             characters: true,
