@@ -84,7 +84,7 @@ async function handleFormSubmit(event: FormSubmitEvent<Schema>) {
               <UFormField label="Description" name="description">
                 <UTextarea v-model="form.description" class="w-full" />
               </UFormField>
-              <UButton :loading="loading" type="submit"> Submit</UButton>
+              <UButton :loading="loading" type="submit">Submit</UButton>
             </UForm>
           </template>
         </UModal>

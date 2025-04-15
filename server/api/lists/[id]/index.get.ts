@@ -28,6 +28,7 @@ export default defineEventHandler(async (event) => {
             advancements: true,
           },
         },
+        messages: true,
         _count: {
           select: {
             characters: true,

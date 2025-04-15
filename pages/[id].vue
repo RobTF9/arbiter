@@ -3,7 +3,7 @@ const route = useRoute();
 const { data } = await useFetch(`/api/lists/${route.params.id}`);
 const list = computed(() => data.value?.list);
 
-console.log(list.value);
+const assistantOpen = ref(false);
 </script>
 
 <template>
@@ -22,9 +22,29 @@ console.log(list.value);
             {{ list.description }}
           </p>
         </div>
-        <UButton color="neutral" icon="i-lucide-message" variant="ghost"
-          >Edit List</UButton
-        >
+        <USlideover v-model:open="assistantOpen" :overlay="false">
+          <UButton
+            color="neutral"
+            icon="i-lucide-sparkles"
+            variant="ghost"
+            @click="assistantOpen = true"
+            >Assistant</UButton
+          >
+          <template #header>
+            <UIcon name="i-lucide-sparkles" class="size-5" />
+            <h2 class="text-lg font-bold">Assistant</h2>
+            <UButton
+              icon="i-lucide-arrow-right"
+              class="ml-auto"
+              variant="ghost"
+              color="neutral"
+              @click="assistantOpen = false"
+            />
+          </template>
+          <template #body>
+            <AssistantDialogue :list-id="list.id" :messages="list.messages" />
+          </template>
+        </USlideover>
       </header>
       <USeparator />
 
