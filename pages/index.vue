@@ -89,7 +89,10 @@ async function handleFormSubmit(event: FormSubmitEvent<Schema>) {
           </template>
         </UModal>
       </header>
-      <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      <div v-if="lists.length === 0" class="w-full">
+        You have no lists yet. Create one to get started.
+      </div>
+      <ul v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         <UCard v-for="list in lists" :key="list.id">
           <header class="mb-4 flex gap-2 items-center">
             <h2 class="font-bold">{{ list.title }}</h2>

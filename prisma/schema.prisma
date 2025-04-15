@@ -18,7 +18,6 @@ model User {
   id        String   @id @default(uuid())
   clerkId   String   @unique // External ID from Clerk
   lists     List[]
-  events    Event[]
 }
 
 // List model
@@ -36,6 +35,7 @@ model List {
   userId      String
   user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   characters  Character[]
+  messages    Message[]
 
   @@index([userId])
 }
@@ -97,15 +97,13 @@ model Wargear {
 model Weapon {
   id String @id @default(uuid())
   name String
-  points Int
   credits Int
-  description String?
+  traits String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   type String
   rarity String
   strength String
-  specialRules String
   damage Int
   shortRange Int
   shortRangeModifier Int
@@ -166,18 +164,26 @@ model Advancement {
   @@unique([name, characterId])
 }
 
-model Event {
+model Message {
   id String @id @default(uuid())
-  type String
-  userId String
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listId String
+  list List @relation(fields: [listId], references: [id], onDelete: Cascade)
   message String
+  sources Json?
   createdAt DateTime @default(now())
-  status EventStatus @default(PENDING)
+  status MessageStatus @default(PENDING)
+  source MessageSource @default(USER)
 }
 
-enum EventStatus {
+enum MessageStatus {
   PENDING
   SUCCESS
+  ERROR
+}
+
+enum MessageSource {
+  USER
+  SYSTEM
+  AI
   ERROR
 }
