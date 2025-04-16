@@ -3,15 +3,12 @@ import { db } from "~/lib/db";
 export default defineEventHandler(async (event) => {
   try {
     const params = event.context.params;
-    console.log("params", params);
 
     if (!params?.id) {
       throw createError({
         statusCode: 400,
       });
     }
-
-    console.log("params", params);
 
     const { message } = await readBody(event);
 
@@ -20,6 +17,15 @@ export default defineEventHandler(async (event) => {
         message,
         listId: params?.id,
         source: "USER",
+        status: "SUCCESS",
+      },
+    });
+
+    const response = await db.message.create({
+      data: {
+        message: "",
+        listId: params?.id,
+        source: "AI",
       },
     });
 
@@ -30,6 +36,7 @@ export default defineEventHandler(async (event) => {
         body: {
           message: createdMessage.message,
           list: params?.id,
+          id: response.id,
         },
       }
     );
@@ -44,6 +51,7 @@ export default defineEventHandler(async (event) => {
     return {
       statusCode: 200,
       data: createdMessage,
+      responseId: response.id,
     };
   } catch (error) {
     console.error("Error creating list:", error);

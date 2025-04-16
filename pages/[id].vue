@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const route = useRoute();
-const { data } = await useFetch(`/api/lists/${route.params.id}`);
+const { data, refresh } = await useFetch(`/api/lists/${route.params.id}`);
 const list = computed(() => data.value?.list);
 
 const assistantOpen = ref(false);
@@ -42,7 +42,11 @@ const assistantOpen = ref(false);
             />
           </template>
           <template #body>
-            <AssistantDialogue :list-id="list.id" :messages="list.messages" />
+            <AssistantDialogue
+              :list-id="list.id"
+              :messages="list.messages"
+              @polling-finished="refresh"
+            />
           </template>
         </USlideover>
       </header>
@@ -100,7 +104,7 @@ const assistantOpen = ref(false);
                 <div class="text-xs text-gray-500 dark:text-gray-400">M</div>
                 <div class="font-bold">{{ character.movement }}"</div>
               </div>
-              <div class="text-center bg-gray-5 dark:bg-gray-800 p-2 rounded">
+              <div class="text-center bg-gray-50 dark:bg-gray-800 p-2 rounded">
                 <div class="text-xs text-gray-500 dark:text-gray-400">WS</div>
                 <div class="font-bold">{{ character.weaponSkill }}+</div>
               </div>
