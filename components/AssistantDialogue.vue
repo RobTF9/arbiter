@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { USkeleton } from "#components";
 import type { FormSubmitEvent } from "@nuxt/ui";
 import type { Message } from "@prisma/client";
 import * as z from "zod";
@@ -21,7 +20,7 @@ type Schema = z.output<typeof schema>;
 const toast = useToast();
 
 onMounted(() => {
-  if (props.messages[0].status === "PENDING") {
+  if (props.messages && props.messages[0]?.status === "PENDING") {
     polling.value = props.messages[0].id;
   }
 });
@@ -35,7 +34,7 @@ async function pollForMessage(id: string) {
 
   if (data?.message && data.message.status === "SUCCESS") {
     polling.value = null;
-    messages.value = [data.message, ...messages.value];
+    messages.value[0] = data.message;
     return;
   }
 
@@ -71,6 +70,7 @@ async function handleSubmit(event: FormSubmitEvent<Schema>) {
 
     loading.value = false;
 
+    console.log("data", data);
     messages.value = [data, ...messages.value];
     state.message = "";
     console.log("responseId", responseId);
@@ -122,7 +122,7 @@ async function handleSubmit(event: FormSubmitEvent<Schema>) {
           size="xs"
           color="info"
         />
-        <div v-else class="text-gray-500 mb-1">
+        <div v-else class="mb-1">
           <span class="text-gray-400 text-xs mb-4">
             {{ message.source === "USER" ? "User" : "Assistant" }}</span
           >
