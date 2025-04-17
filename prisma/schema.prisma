@@ -142,6 +142,9 @@ model Skill {
 
   characterId String
   character Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+  advancementId String? @unique
+  advancement Advancement? @relation(fields: [advancementId], references: [id], onDelete: Cascade)
+
 
   @@index([name])
   @@index([characterId])
@@ -155,8 +158,12 @@ model Advancement {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   cost Int
+  xp Int
   characterId String
   character Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+
+  skill Skill?
+
 
   @@index([name])
   @@index([characterId])
@@ -168,7 +175,7 @@ model Message {
   listId String
   list List @relation(fields: [listId], references: [id], onDelete: Cascade)
   message String
-  sources Json?
+  sources String?
   createdAt DateTime @default(now())
   status MessageStatus @default(PENDING)
   source MessageSource @default(USER)

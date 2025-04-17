@@ -32,7 +32,9 @@ async function pollForMessage(id: string) {
     method: "GET",
   });
 
-  if (data?.message && data.message.status === "SUCCESS") {
+  console.log("pollForMessage", data);
+
+  if (data?.message && data.message.status !== "PENDING") {
     polling.value = null;
     messages.value[0] = data.message;
     return;
@@ -111,7 +113,9 @@ async function handleSubmit(event: FormSubmitEvent<Schema>) {
     <div v-for="message in messages" :key="message.id" class="mb-4">
       <div
         :class="`p-4 rounded text-sm   ${
-          message.source === 'USER'
+          message.status === 'ERROR'
+            ? 'bg-red-50 dark:bg-red-800'
+            : message.source === 'USER'
             ? 'ml-6 bg-gray-50 dark:bg-gray-800'
             : 'mr-6 bg-blue-50 dark:bg-blue-800'
         }`"
@@ -126,7 +130,12 @@ async function handleSubmit(event: FormSubmitEvent<Schema>) {
           <span class="text-gray-400 text-xs mb-4">
             {{ message.source === "USER" ? "User" : "Assistant" }}</span
           >
+          <p v-if="message.status === 'ERROR'">
+            Something went wrong while responding, your list may have been
+            updated though.
+          </p>
           <VueMarkdown :source="message.message" />
+          <MessageSources :message="message" />
           <span class="text-gray-400 text-xs mt-4">
             {{ new Date(message.createdAt).toLocaleString() }}</span
           >

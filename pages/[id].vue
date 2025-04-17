@@ -3,6 +3,43 @@ const route = useRoute();
 const { data, refresh } = await useFetch(`/api/lists/${route.params.id}`);
 const list = computed(() => data.value?.list);
 
+// Compute the total rating based on characters, weapons, wargear, and advancements
+// Compute the total rating based on characters
+const computedRating = computed(() => {
+  if (!list.value?.characters || list.value.characters.length === 0) {
+    return 0;
+  }
+
+  return list.value.characters.reduce((total, character) => {
+    // Add character base points
+    let characterTotal = character.points || 0;
+
+    characterTotal +=
+      (character.weapons || []).reduce((weaponTotal, weapon) => {
+        // Add weapon points
+        return weaponTotal + (weapon.credits || 0);
+      }, 0) +
+      (character.wargear || []).reduce((wargearTotal, wargear) => {
+        // Add wargear points
+        return wargearTotal + (wargear.credits || 0);
+      }, 0) +
+      (character.advancements || []).reduce((advancementTotal, advancement) => {
+        // Add skill points
+        return advancementTotal + (advancement.cost || 0);
+      }, 0);
+
+    // We don't add points from weapons, wargear, and skills directly
+    // as they don't have a points property in the schema
+    // Instead, their cost is already included in the character's points
+
+    return total + characterTotal;
+  }, 0);
+});
+
+const computedCredits = computed(() => {
+  return list.value?.credits - computedRating.value;
+});
+
 const assistantOpen = ref(false);
 </script>
 
@@ -57,7 +94,7 @@ const assistantOpen = ref(false);
         <UCard>
           <div class="text-center">
             <div class="text-sm text-gray-500 mb-1">Rating</div>
-            <div class="text-2xl font-bold">{{ list.rating }}</div>
+            <div class="text-2xl font-bold">{{ computedRating }}</div>
           </div>
         </UCard>
         <UCard>
@@ -69,7 +106,7 @@ const assistantOpen = ref(false);
         <UCard>
           <div class="text-center">
             <div class="text-sm text-gray-500 mb-1">Credits</div>
-            <div class="text-2xl font-bold">{{ list.credits }}</div>
+            <div class="text-2xl font-bold">{{ computedCredits }}</div>
           </div>
         </UCard>
       </div>
