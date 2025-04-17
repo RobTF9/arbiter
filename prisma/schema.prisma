@@ -78,7 +78,6 @@ model Character {
 model Wargear {
   id String @id @default(uuid())
   name String
-  points Int
   credits Int
   description String?
   createdAt DateTime @default(now())

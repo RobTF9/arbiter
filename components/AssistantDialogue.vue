@@ -2,9 +2,9 @@
 import type { FormSubmitEvent } from "@nuxt/ui";
 import type { Message } from "@prisma/client";
 import * as z from "zod";
+import VueMarkdown from "vue-markdown-render";
 
 const props = defineProps<{ messages: Message[]; listId: string }>();
-const emits = defineEmits(["pollingFinished"]);
 
 const messages = ref<Message[]>(props.messages);
 const state = reactive({ message: "" });
@@ -126,7 +126,7 @@ async function handleSubmit(event: FormSubmitEvent<Schema>) {
           <span class="text-gray-400 text-xs mb-4">
             {{ message.source === "USER" ? "User" : "Assistant" }}</span
           >
-          <p>{{ message.message }}</p>
+          <VueMarkdown :source="message.message" />
           <span class="text-gray-400 text-xs mt-4">
             {{ new Date(message.createdAt).toLocaleString() }}</span
           >
