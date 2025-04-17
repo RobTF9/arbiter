@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
     }
 
     // Get request body
-    const { title, description, gang } = await readBody(event);
+    const { title, description, gang, credits } = await readBody(event);
 
     if (!title || !gang) {
       throw createError({
@@ -40,6 +40,7 @@ export default defineEventHandler(async (event) => {
         title,
         description,
         gang,
+        credits,
         userId: user.id,
       },
     });

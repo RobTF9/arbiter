@@ -10,12 +10,14 @@ const form = reactive({
   title: "",
   description: "",
   gang: "",
+  credits: 1000,
 });
 
 const schema = z.object({
   title: z.string().min(1, "Title is required"),
   gang: z.string().min(1, "Gang is required"),
   description: z.string(),
+  credits: z.number(),
 });
 
 const toast = useToast();
@@ -31,6 +33,7 @@ async function handleFormSubmit(event: FormSubmitEvent<Schema>) {
         title: event.data.title,
         description: event.data.description,
         gang: event.data.gang,
+        credits: event.data.credits,
       },
     });
 
@@ -80,6 +83,9 @@ async function handleFormSubmit(event: FormSubmitEvent<Schema>) {
               </UFormField>
               <UFormField label="Gang" name="gang">
                 <UInput v-model="form.gang" class="w-full" />
+              </UFormField>
+              <UFormField label="Credits" name="credits">
+                <UInput v-model="form.credits" type="number" class="w-full" />
               </UFormField>
               <UFormField label="Description" name="description">
                 <UTextarea v-model="form.description" class="w-full" />
