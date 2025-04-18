@@ -82,6 +82,7 @@ const assistantOpen = ref(false);
             <AssistantDialogue
               :list-id="list.id"
               :messages="list.messages"
+              @clear-messages="refresh"
               @polling-finished="refresh"
             />
           </template>

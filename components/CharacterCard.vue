@@ -2,6 +2,7 @@
 import type {
   Advancement,
   Character,
+  Injury,
   Skill,
   Wargear,
   Weapon,
@@ -13,6 +14,7 @@ const props = defineProps<{
     wargear: Wargear[];
     skills: Skill[];
     advancements: Advancement[];
+    injuries: Injury[];
   };
 }>();
 
@@ -159,6 +161,28 @@ const rating = computed(() => {
       >
       <span class="text-sm">{{
         character.skills.map((w) => w.name).join(", ")
+      }}</span>
+    </div>
+    <div
+      v-if="character.advancements && character.advancements.length > 0"
+      class="mt-4"
+    >
+      <span class="font-bold text-sm text-(--ui-text-highlighted) mr-4"
+        >Advancements</span
+      >
+      <span class="text-sm">{{
+        character.advancements.map((w) => w.name).join(", ")
+      }}</span>
+    </div>
+    <div
+      v-if="character.injuries && character.injuries.length > 0"
+      class="mt-4"
+    >
+      <span class="font-bold text-sm text-(--ui-text-highlighted) mr-4"
+        >Injuries</span
+      >
+      <span class="text-sm">{{
+        character.injuries.map((w) => w.name).join(", ")
       }}</span>
     </div>
   </UCard>

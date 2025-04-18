@@ -3,13 +3,18 @@ import type { FormSubmitEvent } from "@nuxt/ui";
 import type { Message } from "@prisma/client";
 import * as z from "zod";
 import VueMarkdown from "vue-markdown-render";
+import MessageSources from "./MessageSources.vue";
 
 const props = defineProps<{ messages: Message[]; listId: string }>();
+const emits = defineEmits(["clearMessages"]);
 
 const messages = ref<Message[]>(props.messages);
 const state = reactive({ message: "" });
 const loading = ref(false);
+const deleting = ref(false);
 const polling = ref<string | null>(null);
+
+console.log("Messages", messages.value);
 
 const schema = z.object({
   message: z.string(),
@@ -31,8 +36,6 @@ async function pollForMessage(id: string) {
   const data = await $fetch(`/api/message/${id}`, {
     method: "GET",
   });
-
-  console.log("pollForMessage", data);
 
   if (data?.message && data.message.status !== "PENDING") {
     polling.value = null;
@@ -58,8 +61,22 @@ watch(polling, (value) => {
   }
 });
 
+async function clearMessages() {
+  deleting.value = true;
+  await $fetch(`/api/message/${props.listId}`, {
+    method: "DELETE",
+  });
+  emits("clearMessages");
+  messages.value = [];
+  toast.add({
+    title: "Messages cleared",
+    duration: 3000,
+    color: "success",
+  });
+  deleting.value = false;
+}
+
 async function handleSubmit(event: FormSubmitEvent<Schema>) {
-  console.log("handleSubmit", event);
   event.preventDefault();
   try {
     loading.value = true;
@@ -72,10 +89,8 @@ async function handleSubmit(event: FormSubmitEvent<Schema>) {
 
     loading.value = false;
 
-    console.log("data", data);
     messages.value = [data, ...messages.value];
     state.message = "";
-    console.log("responseId", responseId);
     polling.value = responseId;
     // await pollForMessage(data.id);
   } catch (error) {
@@ -93,7 +108,7 @@ async function handleSubmit(event: FormSubmitEvent<Schema>) {
 <template>
   <div>
     <UForm
-      class="flex justify-end items-start gap-4 mb-6 sticky top-0 bg-(--ui-bg)"
+      class="flex justify-end items-start gap-1 mb-6 sticky top-0 bg-(--ui-bg)"
       :schema="schema"
       :state="state"
       @submit.prevent="handleSubmit"
@@ -110,6 +125,7 @@ async function handleSubmit(event: FormSubmitEvent<Schema>) {
         >Send</UButton
       >
     </UForm>
+
     <div v-for="message in messages" :key="message.id" class="mb-4">
       <div
         :class="`p-4 rounded text-sm   ${
@@ -135,12 +151,23 @@ async function handleSubmit(event: FormSubmitEvent<Schema>) {
             updated though.
           </p>
           <VueMarkdown :source="message.message" />
-          <MessageSources :message="message" />
+          <MessageSources
+            v-if="message.sources && JSON.parse(message.sources).length > 0"
+            :message="message"
+          />
           <span class="text-gray-400 text-xs mt-4">
             {{ new Date(message.createdAt).toLocaleString() }}</span
           >
         </div>
       </div>
     </div>
+
+    <UButton
+      class="grow-0"
+      :loading="deleting"
+      color="error"
+      @click="clearMessages"
+      >Clear messages</UButton
+    >
   </div>
 </template>
