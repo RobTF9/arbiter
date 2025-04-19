@@ -1,2 +1,2 @@
-@import "tailwindcss";
+@import "../node_modules/tailwindcss/index.css";
 @import "@nuxt/ui";
