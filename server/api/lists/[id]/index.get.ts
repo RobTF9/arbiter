@@ -5,6 +5,7 @@ import type {
   Character,
   Injury,
   List,
+  Message,
   Skill,
   Wargear,
   Weapon,
@@ -15,6 +16,10 @@ export default defineEventHandler(
     event
   ): Promise<{
     list: List & {
+      _count: {
+        characters: number;
+      };
+      messages: Message[];
       characters: (Character & {
         weapons: Weapon[];
         wargear: Wargear[];

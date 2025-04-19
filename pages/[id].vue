@@ -37,6 +37,9 @@ const computedRating = computed(() => {
 });
 
 const computedCredits = computed(() => {
+  if (!list.value?.credits) {
+    return 0;
+  }
   return list.value?.credits - computedRating.value;
 });
 
@@ -81,7 +84,12 @@ const assistantOpen = ref(false);
           <template #body>
             <AssistantDialogue
               :list-id="list.id"
-              :messages="list.messages"
+              :messages="
+                list.messages.map((m) => ({
+                  ...m,
+                  createdAt: new Date(m.createdAt),
+                }))
+              "
               @clear-messages="refresh"
               @polling-finished="refresh"
             />
@@ -126,7 +134,36 @@ const assistantOpen = ref(false);
           <CharacterCard
             v-for="character in list.characters"
             :key="character.id"
-            :character="character"
+            :character="{
+              ...character,
+              createdAt: new Date(character.createdAt),
+              updatedAt: new Date(character.updatedAt),
+              weapons: character.weapons.map((w) => ({
+                ...w,
+                createdAt: new Date(w.createdAt),
+                updatedAt: new Date(w.updatedAt),
+              })),
+              wargear: character.wargear.map((w) => ({
+                ...w,
+                createdAt: new Date(w.createdAt),
+                updatedAt: new Date(w.updatedAt),
+              })),
+              skills: character.skills.map((w) => ({
+                ...w,
+                createdAt: new Date(w.createdAt),
+                updatedAt: new Date(w.updatedAt),
+              })),
+              injuries: character.injuries.map((w) => ({
+                ...w,
+                createdAt: new Date(w.createdAt),
+                updatedAt: new Date(w.updatedAt),
+              })),
+              advancements: character.advancements.map((w) => ({
+                ...w,
+                createdAt: new Date(w.createdAt),
+                updatedAt: new Date(w.updatedAt),
+              })),
+            }"
             :list-id="list.id"
             @polling-finished="refresh"
           />

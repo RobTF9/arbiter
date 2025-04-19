@@ -39,14 +39,23 @@ async function pollForMessage(id: string) {
 
   if (data?.message && data.message.status !== "PENDING") {
     polling.value = null;
-    messages.value[0] = data.message;
+    messages.value[0] = {
+      ...data.message,
+      createdAt: new Date(data.message.createdAt),
+    };
     return;
   }
 
   if (data?.message && data.message.status === "PENDING") {
     messages.value =
       messages.value[0].id !== data.message.id
-        ? [data.message, ...messages.value]
+        ? [
+            {
+              ...data.message,
+              createdAt: new Date(data.message.createdAt),
+            },
+            ...messages.value,
+          ]
         : messages.value;
   }
 
@@ -89,7 +98,10 @@ async function handleSubmit(event: FormSubmitEvent<Schema>) {
 
     loading.value = false;
 
-    messages.value = [data, ...messages.value];
+    messages.value = [
+      { ...data, createdAt: new Date(data.createdAt) },
+      ...messages.value,
+    ];
     state.message = "";
     polling.value = responseId;
     // await pollForMessage(data.id);
