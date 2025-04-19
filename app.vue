@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import "./assets/index.css";
 import { SignUp } from "@clerk/vue";
 </script>
 
