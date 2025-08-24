@@ -7,6 +7,7 @@ import type {
   Wargear,
   Weapon,
 } from "@prisma/client";
+import AttributeList from "./AttributeList.vue";
 
 const props = defineProps<{
   character: Character & {
@@ -147,43 +148,25 @@ const rating = computed(() => {
         ]"
       />
     </div>
-    <div v-if="character.wargear && character.wargear.length > 0" class="mt-4">
-      <span class="font-bold text-sm text-(--ui-text-highlighted) mr-4"
-        >Wargear</span
-      >
-      <span class="text-sm">{{
-        character.wargear.map((w) => w.name).join(", ")
-      }}</span>
-    </div>
-    <div v-if="character.skills && character.skills.length > 0" class="mt-4">
-      <span class="font-bold text-sm text-(--ui-text-highlighted) mr-4"
-        >Skills</span
-      >
-      <span class="text-sm">{{
-        character.skills.map((w) => w.name).join(", ")
-      }}</span>
-    </div>
-    <div
+    <AttributeList
+      v-if="character.wargear && character.wargear.length > 0"
+      title="Wargear"
+      :attributes="character.wargear"
+    />
+    <AttributeList
+      v-if="character.skills && character.skills.length > 0"
+      title="Skills"
+      :attributes="character.skills"
+    />
+    <AttributeList
       v-if="character.advancements && character.advancements.length > 0"
-      class="mt-4"
-    >
-      <span class="font-bold text-sm text-(--ui-text-highlighted) mr-4"
-        >Advancements</span
-      >
-      <span class="text-sm">{{
-        character.advancements.map((w) => w.name).join(", ")
-      }}</span>
-    </div>
-    <div
+      title="Advancements"
+      :attributes="character.advancements"
+    />
+    <AttributeList
       v-if="character.injuries && character.injuries.length > 0"
-      class="mt-4"
-    >
-      <span class="font-bold text-sm text-(--ui-text-highlighted) mr-4"
-        >Injuries</span
-      >
-      <span class="text-sm">{{
-        character.injuries.map((w) => w.name).join(", ")
-      }}</span>
-    </div>
+      title="Injuries"
+      :attributes="character.injuries"
+    />
   </UCard>
 </template>
