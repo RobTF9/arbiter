@@ -8,6 +8,7 @@ import type {
   Weapon,
 } from "@prisma/client";
 import AttributeList from "./AttributeList.vue";
+import StatField from "./StatField.vue";
 
 const props = defineProps<{
   character: Character & {
@@ -48,58 +49,79 @@ const rating = computed(() => {
       <UBadge variant="subtle" class="rounded-full">{{ rating }} rating</UBadge>
     </div>
     <div class="grid grid-cols-13 gap-2 mb-4">
-      <div class="text-center bg-gray-50 dark:bg-gray-800 p-2 rounded">
-        <div class="text-xs text-gray-500 dark:text-gray-400">M</div>
-        <div class="font-bold">{{ character.movement }}"</div>
-      </div>
-      <div class="text-center bg-gray-50 dark:bg-gray-800 p-2 rounded">
-        <div class="text-xs text-gray-500 dark:text-gray-400">WS</div>
-        <div class="font-bold">{{ character.weaponSkill }}+</div>
-      </div>
-      <div class="text-center bg-gray-50 dark:bg-gray-800 p-2 rounded">
-        <div class="text-xs text-gray-500 dark:text-gray-400">BS</div>
-        <div class="font-bold">{{ character.ballisticSkill }}+</div>
-      </div>
-      <div class="text-center bg-gray-50 dark:bg-gray-800 p-2 rounded">
-        <div class="text-xs text-gray-500 dark:text-gray-400">S</div>
-        <div class="font-bold">{{ character.strength }}</div>
-      </div>
-      <div class="text-center bg-gray-50 dark:bg-gray-800 p-2 rounded">
-        <div class="text-xs text-gray-500 dark:text-gray-400">T</div>
-        <div class="font-bold">{{ character.toughness }}</div>
-      </div>
-      <div class="text-center bg-gray-50 dark:bg-gray-800 p-2 rounded">
-        <div class="text-xs text-gray-500 dark:text-gray-400">W</div>
-        <div class="font-bold">{{ character.wounds }}</div>
-      </div>
-      <div class="text-center bg-gray-50 dark:bg-gray-800 p-2 rounded">
-        <div class="text-xs text-gray-500 dark:text-gray-400">I</div>
-        <div class="font-bold">{{ character.initiative }}+</div>
-      </div>
-      <div class="text-center bg-gray-50 dark:bg-gray-800 p-2 rounded">
-        <div class="text-xs text-gray-500 dark:text-gray-400">A</div>
-        <div class="font-bold">{{ character.attacks }}</div>
-      </div>
-      <div class="text-center bg-amber-50 dark:bg-gray-800 p-2 rounded">
-        <div class="text-xs text-gray-500 dark:text-gray-400">Ld</div>
-        <div class="font-bold">{{ character.leaderShip }}+</div>
-      </div>
-      <div class="text-center bg-amber-50 dark:bg-amber-800 p-2 rounded">
-        <div class="text-xs text-gray-500 dark:text-gray-400">Cl</div>
-        <div class="font-bold">{{ character.cool }}+</div>
-      </div>
-      <div class="text-center bg-amber-50 dark:bg-amber-800 p-2 rounded">
-        <div class="text-xs text-gray-500 dark:text-gray-400">Wil</div>
-        <div class="font-bold">{{ character.willpower }}+</div>
-      </div>
-      <div class="text-center bg-amber-50 dark:bg-amber-800 p-2 rounded">
-        <div class="text-xs text-gray-500 dark:text-gray-400">Int</div>
-        <div class="font-bold">{{ character.intelligence }}+</div>
-      </div>
-      <div class="text-center bg-red-100 dark:bg-red-800 p-2 rounded">
-        <div class="text-xs text-gray-500 dark:text-gray-400">XP</div>
-        <div class="font-bold">{{ character.xp }}</div>
-      </div>
+      <StatField
+        color="gray"
+        label="M"
+        key="movement"
+        :value="character.movement"
+      />
+      <StatField
+        color="gray"
+        label="WS"
+        key="weaponSkill"
+        :value="`${character.weaponSkill}+`"
+      />
+      <StatField
+        color="gray"
+        label="BS"
+        key="ballisticSkill"
+        :value="`${character.ballisticSkill}+`"
+      />
+      <StatField
+        color="gray"
+        label="S"
+        key="strength"
+        :value="character.strength"
+      />
+      <StatField
+        color="gray"
+        label="T"
+        key="toughness"
+        :value="character.toughness"
+      />
+      <StatField
+        color="gray"
+        label="W"
+        key="wounds"
+        :value="character.wounds"
+      />
+      <StatField
+        color="gray"
+        label="I"
+        key="initiative"
+        :value="`${character.initiative}+`"
+      />
+      <StatField
+        color="gray"
+        label="A"
+        key="attacks"
+        :value="character.attacks"
+      />
+      <StatField
+        color="amber"
+        label="Ld"
+        key="leaderShip"
+        :value="`${character.leaderShip}+`"
+      />
+      <StatField
+        color="amber"
+        label="Cl"
+        key="cool"
+        :value="`${character.cool}+`"
+      />
+      <StatField
+        color="amber"
+        label="Wil"
+        key="willpower"
+        :value="`${character.willpower}+`"
+      />
+      <StatField
+        color="amber"
+        label="Int"
+        key="intelligence"
+        :value="`${character.intelligence}+`"
+      />
+      <StatField color="red" label="XP" key="xp" :value="`${character.xp}`" />
     </div>
     <div v-if="character.weapons && character.weapons.length > 0">
       <UTable
