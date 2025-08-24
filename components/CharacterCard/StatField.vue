@@ -9,14 +9,23 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  "update:value": [value: string | number];
+  "update:value": [value: number];
 }>();
 
 const temp = ref(props.value);
 const isEditing = ref(false);
 
 const handleBlur = () => {
-  emit("update:value", temp.value);
+  if (typeof temp.value === "string") {
+    const parsed = parseInt(
+      temp.value.replaceAll(props.prefix || props.suffix || "", ""),
+      10
+    );
+    emit("update:value", parsed);
+  } else {
+    emit("update:value", temp.value);
+  }
+
   isEditing.value = false;
 };
 

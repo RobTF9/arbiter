@@ -133,7 +133,6 @@ const assistantOpen = ref(false);
         <div v-else>
           <CharacterCard
             v-for="character in list.characters"
-            :key="character.id"
             :character="{
               ...character,
               createdAt: new Date(character.createdAt),

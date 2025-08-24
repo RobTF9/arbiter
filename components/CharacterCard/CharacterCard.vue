@@ -37,6 +37,13 @@ const rating = computed(() => {
 
   return basePoints + weaponsPoints + wargearPoints + advancementPoints;
 });
+
+async function updateCharacter(key: string, value: string | number) {
+  await $fetch(`/api/character/${props.character.id}`, {
+    method: "POST",
+    body: { [key]: value },
+  });
+}
 </script>
 
 <template>
@@ -54,74 +61,92 @@ const rating = computed(() => {
         label="M"
         key="movement"
         :value="character.movement"
+        @update:value="(e) => updateCharacter('movement', e)"
       />
       <StatField
         color="gray"
         label="WS"
         key="weaponSkill"
         :value="`${character.weaponSkill}+`"
+        @update:value="(e) => updateCharacter('weaponSkill', e)"
       />
       <StatField
         color="gray"
         label="BS"
         key="ballisticSkill"
         :value="`${character.ballisticSkill}+`"
+        @update:value="(e) => updateCharacter('ballisticSkill', e)"
       />
       <StatField
         color="gray"
         label="S"
         key="strength"
         :value="character.strength"
+        @update:value="(e) => updateCharacter('strength', e)"
       />
       <StatField
         color="gray"
         label="T"
         key="toughness"
         :value="character.toughness"
+        @update:value="(e) => updateCharacter('toughness', e)"
       />
       <StatField
         color="gray"
         label="W"
         key="wounds"
         :value="character.wounds"
+        @update:value="(e) => updateCharacter('wounds', e)"
       />
       <StatField
         color="gray"
         label="I"
         key="initiative"
         :value="`${character.initiative}+`"
+        @update:value="(e) => updateCharacter('initiative', e)"
       />
       <StatField
         color="gray"
         label="A"
         key="attacks"
         :value="character.attacks"
+        @update:value="(e) => updateCharacter('attacks', e)"
       />
       <StatField
         color="amber"
         label="Ld"
         key="leaderShip"
         :value="`${character.leaderShip}+`"
+        @update:value="(e) => updateCharacter('leaderShip', e)"
       />
       <StatField
         color="amber"
         label="Cl"
         key="cool"
         :value="`${character.cool}+`"
+        @update:value="(e) => updateCharacter('cool', e)"
       />
       <StatField
         color="amber"
         label="Wil"
         key="willpower"
         :value="`${character.willpower}+`"
+        @update:value="(e) => updateCharacter('willpower', e)"
       />
       <StatField
         color="amber"
         label="Int"
         key="intelligence"
         :value="`${character.intelligence}+`"
+        @update:value="(e) => updateCharacter('intelligence', e)"
       />
-      <StatField color="red" label="XP" key="xp" :value="`${character.xp}`" />
+      <StatField
+        color="red"
+        label="XP"
+        key="xp"
+        :value="`${character.xp}`"
+        @update:value="(e) => updateCharacter('xp', e)"
+      />
     </div>
     <div v-if="character.weapons && character.weapons.length > 0">
       <UTable

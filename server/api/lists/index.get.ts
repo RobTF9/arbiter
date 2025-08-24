@@ -6,6 +6,9 @@ export default defineEventHandler(async (event) => {
     // Get the authenticated user's Clerk ID
     const { userId: clerkId } = getAuth(event);
 
+    console.log("Clerk ID:", clerkId);
+    console.log("Event Context Params:", event.context.params);
+
     if (!clerkId) {
       throw createError({
         statusCode: 401,
